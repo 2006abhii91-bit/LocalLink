@@ -1,6 +1,8 @@
 package com.locallink.controller;
 
-import com.locallink.dto.RegisterRequest;
+import com.locallink.dto.request.LoginRequest;
+import com.locallink.dto.request.RegisterRequest;
+import com.locallink.dto.response.LoginResponse;
 import com.locallink.dto.response.UserRegistrationResponse;
 import com.locallink.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
@@ -19,5 +21,15 @@ public class UserController {
     @PostMapping("/register")
     public UserRegistrationResponse registerUser(@Valid @RequestBody RegisterRequest request) {
         return userService.registerUser(request);
+    }
+
+    @PostMapping("/login")
+    public LoginResponse loginUser(@Valid @RequestBody LoginRequest request) {
+        return userService.loginUser(request);
+    }
+
+    @GetMapping("/profile")
+    public String profile() {
+        return "Welcome! You are authenticated.";
     }
 }

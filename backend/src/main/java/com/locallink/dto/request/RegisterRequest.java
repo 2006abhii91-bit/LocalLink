@@ -1,4 +1,4 @@
-package com.locallink.dto;
+package com.locallink.dto.request;
 import com.locallink.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

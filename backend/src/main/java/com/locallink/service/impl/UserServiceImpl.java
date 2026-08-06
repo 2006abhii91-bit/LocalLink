@@ -1,9 +1,16 @@
 package com.locallink.service.impl;
 
-import com.locallink.dto.RegisterRequest;
+import com.locallink.dto.request.LoginRequest;
+import com.locallink.dto.request.RegisterRequest;
+import com.locallink.dto.response.LoginResponse;
 import com.locallink.dto.response.UserRegistrationResponse;
 import com.locallink.entity.User;
 import com.locallink.repository.UserRepository;
+import com.locallink.security.JwtService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +19,16 @@ public class UserServiceImpl {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
 
     public UserServiceImpl(UserRepository userRepository,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,AuthenticationManager authenticationManager,JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     public UserRegistrationResponse registerUser(RegisterRequest request) {
@@ -48,5 +59,19 @@ public class UserServiceImpl {
         response.setMessage("User registered successfully");
 
         return response;
+    }
+
+    public LoginResponse loginUser(LoginRequest request) {
+
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                request.getEmail(),
+                                request.getPassword()
+                        )
+                );
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String token = jwtService.generateToken(userDetails);
+        return new LoginResponse("Login successful", token);
     }
 }

@@ -161,8 +161,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable("/provider-login") {
-                            // Placeholder for Provider Login Screen
-                            LoginPlaceholder(navController = navController, role = "Worker")
+                            WorkerLoginScreen(navController = navController)
                         }
                         composable(
                             route = "worker_login",

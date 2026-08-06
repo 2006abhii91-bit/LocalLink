@@ -1,8 +1,15 @@
 /home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/LocalLinkApplication.java
 /home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/controller/UserController.java
-/home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/dto/RegisterRequest.java
+/home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/dto/request/LoginRequest.java
+/home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/dto/request/RegisterRequest.java
+/home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/dto/response/LoginResponse.java
 /home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/dto/response/UserRegistrationResponse.java
 /home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/entity/User.java
 /home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/enums/Role.java
 /home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/repository/UserRepository.java
+/home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/security/CustomUserDetails.java
+/home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/security/CustomUserDetailsService.java
+/home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/security/JwtAuthenticationFilter.java
+/home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/security/JwtService.java
+/home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/security/SecurityConfig.java
 /home/abhii/projects/LocalLink/Local-workers/backend/src/main/java/com/locallink/service/impl/UserServiceImpl.java

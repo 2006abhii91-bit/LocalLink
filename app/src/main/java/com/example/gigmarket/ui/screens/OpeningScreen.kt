@@ -35,12 +35,16 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.gigmarket.ui.components.LocalLinkLogo
 import com.example.gigmarket.ui.theme.DarkBackground
 import com.example.gigmarket.ui.theme.DarkBackgroundSecondary
+import com.example.gigmarket.ui.theme.GigMarketTheme
+import com.example.gigmarket.ui.theme.NeonCyan
 import com.example.gigmarket.ui.theme.NeonElectricBlue
 import com.example.gigmarket.ui.theme.NeonLinkOrange
 import kotlin.math.PI
@@ -99,31 +103,141 @@ fun OpeningScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // LocalLink logo
+            // LocalLink logo with tagline ("Connecting Your Community")
             LocalLinkLogo(
                 fontSize = 48.sp,
                 taglineFontSize = 15.sp,
                 showTagline = true
             )
 
-            Spacer(modifier = Modifier.height(72.dp))
+            Spacer(modifier = Modifier.height(64.dp))
 
-            // Login as User button (blue)
-            NeonGlowButton(
-                text = "Login as User",
-                glowColor = NeonElectricBlue,
-                onClick = { navController.navigate("/user-login-form") }
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Login as Worker button (orange)
-            NeonGlowButton(
-                text = "Login as Worker",
-                glowColor = NeonLinkOrange,
+            // Primary (cyan) Login Button
+            PrimaryCyanButton(
+                text = "Login",
                 onClick = { navController.navigate("worker_login") }
             )
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            // Secondary (outlined) Create Account Button
+            SecondaryOutlinedButton(
+                text = "Create Account",
+                onClick = { navController.navigate("worker_signup") }
+            )
         }
+    }
+}
+
+@Composable
+fun PrimaryCyanButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val infiniteTransition = rememberInfiniteTransition(label = "primaryBtnGlow")
+    val hoverGlow by infiniteTransition.animateFloat(
+        initialValue = 0.5f,
+        targetValue = 0.85f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1800, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "hoverGlow"
+    )
+
+    val scale = if (isPressed) 0.97f else 1f
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .scale(scale)
+            .height(56.dp)
+            .shadow(
+                elevation = if (isPressed) 8.dp else 18.dp,
+                shape = RoundedCornerShape(28.dp),
+                ambientColor = NeonCyan.copy(alpha = hoverGlow * 0.7f),
+                spotColor = NeonCyan.copy(alpha = hoverGlow * 0.7f)
+            )
+            .background(
+                brush = Brush.horizontalGradient(
+                    colors = listOf(
+                        NeonCyan,
+                        NeonElectricBlue
+                    )
+                ),
+                shape = RoundedCornerShape(28.dp)
+            )
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            fontSize = 17.sp,
+            fontWeight = FontWeight.Bold,
+            color = DarkBackground,
+            letterSpacing = 0.5.sp
+        )
+    }
+}
+
+@Composable
+fun SecondaryOutlinedButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val scale = if (isPressed) 0.97f else 1f
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .scale(scale)
+            .height(56.dp)
+            .shadow(
+                elevation = if (isPressed) 4.dp else 10.dp,
+                shape = RoundedCornerShape(28.dp),
+                ambientColor = NeonCyan.copy(alpha = 0.25f),
+                spotColor = NeonCyan.copy(alpha = 0.25f)
+            )
+            .background(
+                color = Color.White.copy(alpha = 0.05f),
+                shape = RoundedCornerShape(28.dp)
+            )
+            .border(
+                width = 1.5.dp,
+                brush = Brush.horizontalGradient(
+                    colors = listOf(
+                        NeonCyan.copy(alpha = 0.85f),
+                        NeonCyan.copy(alpha = 0.45f)
+                    )
+                ),
+                shape = RoundedCornerShape(28.dp)
+            )
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            fontSize = 17.sp,
+            fontWeight = FontWeight.Bold,
+            color = NeonCyan,
+            letterSpacing = 0.5.sp
+        )
     }
 }
 
@@ -133,7 +247,6 @@ fun ParticleBackground(
     gradientAlpha: Float,
     modifier: Modifier = Modifier
 ) {
-    // Fixed particle data (radius, angle, speed, size, color)
     val particles = remember {
         listOf(
             Triple(Offset(0.15f, 0.2f),  0.003f, NeonElectricBlue),
@@ -155,7 +268,6 @@ fun ParticleBackground(
         val w = size.width
         val h = size.height
 
-        // Draw radial glow accents
         drawCircle(
             brush = Brush.radialGradient(
                 colors = listOf(
@@ -182,7 +294,6 @@ fun ParticleBackground(
             center = Offset(w * 0.8f, h * 0.7f)
         )
 
-        // Draw floating particles
         particles.forEachIndexed { index, (origin, speed, color) ->
             val angle = (particleOffset + index * 0.08f) * 2 * PI.toFloat()
             val orbitRadius = 30f + index * 8f
@@ -196,7 +307,6 @@ fun ParticleBackground(
                 center = Offset(cx, cy)
             )
 
-            // Soft glow around particle
             drawCircle(
                 brush = Brush.radialGradient(
                     colors = listOf(
@@ -213,72 +323,11 @@ fun ParticleBackground(
     }
 }
 
+@Preview(showBackground = true, backgroundColor = 0xFF0F172A)
 @Composable
-fun NeonGlowButton(
-    text: String,
-    glowColor: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-
-    val infiniteTransition = rememberInfiniteTransition(label = "btnGlow")
-    val hoverGlow by infiniteTransition.animateFloat(
-        initialValue = 0.5f,
-        targetValue = 0.9f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1800, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hoverGlow"
-    )
-
-    val scale = if (isPressed) 0.97f else 1f
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .scale(scale)
-            .height(56.dp)
-            .shadow(
-                elevation = if (isPressed) 8.dp else 18.dp,
-                shape = RoundedCornerShape(28.dp),
-                ambientColor = glowColor.copy(alpha = hoverGlow * 0.6f),
-                spotColor = glowColor.copy(alpha = hoverGlow * 0.6f)
-            )
-            .background(
-                brush = Brush.horizontalGradient(
-                    colors = listOf(
-                        glowColor.copy(alpha = 0.18f),
-                        glowColor.copy(alpha = 0.28f)
-                    )
-                ),
-                shape = RoundedCornerShape(28.dp)
-            )
-            .border(
-                width = 1.5.dp,
-                brush = Brush.horizontalGradient(
-                    colors = listOf(
-                        glowColor.copy(alpha = 0.7f),
-                        glowColor.copy(alpha = 0.4f)
-                    )
-                ),
-                shape = RoundedCornerShape(28.dp)
-            )
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                onClick = onClick
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            fontSize = 17.sp,
-            fontWeight = FontWeight.Bold,
-            color = glowColor,
-            letterSpacing = 0.5.sp
-        )
+fun OpeningScreenPreview() {
+    GigMarketTheme {
+        OpeningScreen(navController = rememberNavController())
     }
 }
+
