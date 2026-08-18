@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
-import java.util.Collections;
+
 
 @Entity
 @Table(name = "users")
@@ -25,12 +25,24 @@ public class User implements UserDetails {
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private boolean isWorker = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(
+
+        Collection<GrantedAuthority> authorities = new java.util.ArrayList<>();
+
+        authorities.add(
                 new SimpleGrantedAuthority("ROLE_" + role.name())
         );
+
+        if (isWorker) {
+            authorities.add(
+                    new SimpleGrantedAuthority("ROLE_WORKER")
+            );
+        }
+
+        return authorities;
     }
 
     @Override

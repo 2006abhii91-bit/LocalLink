@@ -1,8 +1,8 @@
 package com.locallink.dto.request;
-import com.locallink.enums.Role;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -30,6 +30,5 @@ public class RegisterRequest {
     @Size(min = 10, max = 10, message = "Phone number must be exactly 10 digits")
     private String phoneNumber;
 
-    @NotNull(message = "Role is required")
-    private Role role;
+
 }
