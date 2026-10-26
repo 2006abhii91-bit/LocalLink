@@ -63,6 +63,9 @@ public class SecurityConfig {
                                 "/api/users/login"
                         ).permitAll()
 
+                        .requestMatchers("/api/worker/search")
+                        .authenticated()
+
                         .requestMatchers("/api/customer/**")
                         .hasRole("CUSTOMER")
 
