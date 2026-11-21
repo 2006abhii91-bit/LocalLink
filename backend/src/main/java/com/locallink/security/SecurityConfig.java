@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -77,6 +78,15 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/admin/**")
                         .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/api/bookings")
+                        .hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.GET, "/api/bookings/customer")
+                        .hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.GET, "/api/bookings/worker")
+                        .hasRole("WORKER")
 
                         .anyRequest().authenticated()
                 )
