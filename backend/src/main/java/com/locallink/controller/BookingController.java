@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -99,4 +99,70 @@ public class BookingController {
         return ResponseEntity.ok(bookings);
     }
 
+
+    // 4. ACCEPT BOOKING
+    @PatchMapping("/{bookingId}/accept")
+    public ResponseEntity<BookingResponse> acceptBooking(
+            @PathVariable Long bookingId,
+            @AuthenticationPrincipal User worker) {
+
+        Booking booking = bookingService.acceptBooking(
+                bookingId, worker.getId());
+
+        return ResponseEntity.ok(toResponse(booking));
+    }
+
+    // 5. REJECT BOOKING
+    @PatchMapping("/{bookingId}/reject")
+    public ResponseEntity<BookingResponse> rejectBooking(
+            @PathVariable Long bookingId,
+            @AuthenticationPrincipal User worker) {
+
+        Booking booking = bookingService.rejectBooking(
+                bookingId, worker.getId());
+
+        return ResponseEntity.ok(toResponse(booking));
+    }
+
+    // 6. COMPLETE BOOKING
+    @PatchMapping("/{bookingId}/complete")
+    public ResponseEntity<BookingResponse> completeBooking(
+            @PathVariable Long bookingId,
+            @AuthenticationPrincipal User worker) {
+
+        Booking booking = bookingService.completeBooking(
+                bookingId, worker.getId());
+
+        return ResponseEntity.ok(toResponse(booking));
+    }
+
+    // 7. CANCEL BOOKING
+    @PatchMapping("/{bookingId}/cancel")
+    public ResponseEntity<BookingResponse> cancelBooking(
+            @PathVariable Long bookingId,
+            @AuthenticationPrincipal User customer) {
+
+        Booking booking = bookingService.cancelBooking(
+                bookingId, customer.getId());
+
+        return ResponseEntity.ok(toResponse(booking));
+    }
+
+    // COMMON RESPONSE MAPPER
+    private BookingResponse toResponse(Booking booking) {
+
+        return new BookingResponse(
+                booking.getId(),
+                booking.getCustomer().getId(),
+                booking.getWorkerProfile().getId(),
+                booking.getServiceDescription(),
+                booking.getServiceAddress(),
+                booking.getScheduledAt(),
+                booking.getStatus(),
+                booking.getCreatedAt()
+        );
+    }
+
+
 }
+
